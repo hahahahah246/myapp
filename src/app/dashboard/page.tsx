@@ -5,9 +5,12 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -26,6 +29,11 @@ export default async function DashboardPage() {
     .eq("user_id", user.id)
     .eq("status", "active")
     .maybeSingle();
+
+  // Redirect to pricing if no active subscription
+  if (!subscription) {
+    return redirect("/pricing?message=subscription-required");
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,6 +69,13 @@ export default async function DashboardPage() {
                   )}
                 </p>
               </CardContent>
+              <CardFooter>
+                <Link href="/dashboard/subscription" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Manage Subscription
+                  </Button>
+                </Link>
+              </CardFooter>
             </Card>
 
             <Card>
@@ -79,6 +94,13 @@ export default async function DashboardPage() {
                   </p>
                 </div>
               </CardContent>
+              <CardFooter>
+                <Link href="/dashboard/profile" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Edit Profile
+                  </Button>
+                </Link>
+              </CardFooter>
             </Card>
           </div>
         </div>

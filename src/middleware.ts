@@ -32,9 +32,27 @@ export async function middleware(req: NextRequest) {
       error,
     } = await supabase.auth.getSession();
 
-    // Protected routes
+    // Protected routes - require authentication
     if (req.nextUrl.pathname.startsWith("/dashboard") && !session) {
       return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+
+    // Check subscription for dashboard access
+    if (req.nextUrl.pathname === "/dashboard" && session) {
+      // Get user subscription status
+      const { data: subscription } = await supabase
+        .from("subscriptions")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .eq("status", "active")
+        .maybeSingle();
+
+      // Redirect to pricing if no active subscription
+      if (!subscription && req.nextUrl.pathname === "/dashboard") {
+        return NextResponse.redirect(
+          new URL("/pricing?message=subscription-required", req.url),
+        );
+      }
     }
 
     return res;

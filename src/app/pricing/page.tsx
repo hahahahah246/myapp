@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
-import PricingCard from "@/components/pricing-card";
+import PricingPlans from "@/components/pricing-plans";
+import { SubscriptionRequired } from "@/components/subscription-required";
 import { createClient } from "../../../supabase/server";
 
 export default async function Pricing() {
@@ -8,17 +9,11 @@ export default async function Pricing() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: plans, error } = await supabase.functions.invoke(
-    "supabase-functions-get-plans",
-  );
-
-  const result = plans?.items;
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">
             Simple, transparent pricing
           </h1>
@@ -27,10 +22,9 @@ export default async function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {result?.map((item: any) => (
-            <PricingCard key={item.id} item={item} user={user} />
-          ))}
+        <div className="max-w-6xl mx-auto">
+          <SubscriptionRequired />
+          <PricingPlans />
         </div>
       </div>
     </div>
