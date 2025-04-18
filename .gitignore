@@ -41,10 +41,12 @@ yarn-error.log*
 next-env.d.ts
 
 # Tempo
-
 node_modules/
+**/tempobook/
 **/tempobook/dynamic/
 **/tempobook/storyboards/
+src/app/tempobook/
+src/tempobook/
 
 # remove git history
 .git
