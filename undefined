@@ -1,0 +1,9 @@
+import Footer from "@/components/footer";
+
+export default function FooterStoryboard() {
+  return (
+    <div className="bg-background">
+      <Footer />
+    </div>
+  );
+}
